@@ -45,11 +45,13 @@ public class WeatherService {
             String jsonData = response.body().string();
             if (response.isSuccessful()) {
                 JSONObject weatherJSON = new JSONObject(jsonData);
-                JSONArray forcastsJSON = weatherJSON.getJSONArray("list");
-                for (int i = 0; i< forcastsJSON.length(); i++){
-                    JSONObject forecastJSON = forcastsJSON.getJSONObject(i);
+                JSONArray forecastsJSON = weatherJSON.getJSONArray("list");
+
+                for (int i = 0; i< forecastsJSON.length(); i++){
+                    JSONObject forecastJSON = forecastsJSON.getJSONObject(i);
                     String humidity = forecastJSON.getString("humidity");
-                    Forecast forecast = new Forecast(humidity);
+                    String avgtemp = forecastJSON.getJSONObject("temp").getString("day");
+                    Forecast forecast = new Forecast(humidity, avgtemp);
                     forecasts.add(forecast);
                 }
             }
