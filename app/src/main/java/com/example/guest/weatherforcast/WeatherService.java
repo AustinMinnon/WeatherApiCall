@@ -23,11 +23,12 @@ public class WeatherService {
         String ApiKey = Constants.ApiKey;
 
         HttpUrl.Builder urlBuilder = HttpUrl.parse(Constants.baseUrl).newBuilder();
-        urlBuilder.addQueryParameter(Constants.LOCATION, location);
+        urlBuilder.addQueryParameter(Constants.WEATHER_LOCATION_QUERY_PARAMETER, location);
+        urlBuilder.addQueryParameter(Constants.WEATHER_API_QUERY_PARAMETER, ApiKey);
         String url = urlBuilder.build().toString();
 
         OkHttpClient client = new OkHttpClient.Builder()
-            .build();
+                .build();
 
 
         Request request= new Request.Builder()
@@ -45,10 +46,7 @@ public class WeatherService {
             if (response.isSuccessful()) {
                 JSONObject weatherJSON = new JSONObject(jsonData);
                 JSONArray forcastsJSON = weatherJSON.getJSONArray("list");
-//                String city = weatherJSON.getJSONObject("city").getString("name");
-//                String country = weatherJSON.getJSONObject("country").getString("country");
-//                int cityId = weatherJSON.getJSONObject("city").getInt("id");
-                for (int i = 0; i< weatherJSON.length(); i++){
+                for (int i = 0; i< forcastsJSON.length(); i++){
                     JSONObject forecastJSON = forcastsJSON.getJSONObject(i);
                     String humidity = forecastJSON.getString("humidity");
                     Forecast forecast = new Forecast(humidity);

@@ -42,28 +42,20 @@ public class WeatherActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
+
                 e.printStackTrace();
             }
 
             @Override
             public void onResponse(Call call, Response response) {
-                mForecasts = weatherService.processResults(response);
-
-                WeatherActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run(){
-                       String[] dayForecast = new String[mForecasts.size()];
-                        for (int i = 0; i<dayForecast.length; i++){
-                            dayForecast[i] = mForecasts.get(i).getHumidity();
-                        }
-                        ArrayAdapter adapter = new ArrayAdapter(WeatherActivity.this, android.R.layout.simple_list_item_1, dayForecast);
-                        mListView.setAdapter(adapter);
-
-                        for (Forecast forecast : mForecasts) {
-                            Log.d(TAG, "humidity " + forecast.getHumidity());
-                        }
+                try{
+                    String jsonData = response.body().string();
+                    if (response.isSuccessful()) {
+                        Log.v(TAG, jsonData);
                     }
-                });
+                }   catch(IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
